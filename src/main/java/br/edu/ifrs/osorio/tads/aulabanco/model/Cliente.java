@@ -1,9 +1,9 @@
 package br.edu.ifrs.osorio.tads.aulabanco.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
+
 @Entity
 public class Cliente {
     @Id
@@ -13,50 +13,31 @@ public class Cliente {
     private String nome;
     private String cpf;
     private String telefone;
-    private String endereco;
-    private String bairro;
-    private String cidade;
-    private String uf;
-    private String cep;
+
+    //Com cascade all tira a necessidade de existir previamente um endereco no banco para poder salvar, sendo assim
+    //basta salvar um cliente com endereço e o banco vai criar automaticamente o endereço e depois o cliente
+    //isso tira a necessidade de um enderecoRepository para salvar este endereco previamente
+    @OneToOne (cascade = CascadeType.ALL)
+    private Endereco endereco = new Endereco();
+
+    @OneToMany (cascade = CascadeType.ALL)
+    @JoinColumn (name = "cliente_id")
+    private List<Pedido> pedidos;
 
 
-    public String getCep() {
-        return cep;
+    public List<Pedido> getPedidos() {
+        return pedidos;
     }
 
-    public void setCep(String cep) {
-        this.cep = cep;
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
 
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getEndereco() {
+    public Endereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
 
